@@ -16,15 +16,7 @@ public class MainServlet extends HttpServlet {
     private String ip;
     private String name;
     private int gameCount = 1;
-    private String defaultQuestion = "<h1>Ты потерял память.</h1>\n" +
-            "<p>     Принять вызов НЛО?</p>" +
-            "<form method=\"post\">\n" +
-            "<input id=\"yes\" value=\"pickUp\" type=\"radio\" name=\"question\">\n" +
-            "<label for=\"yes\">Принять вызов</label><br>\n" +
-            "<input id=\"no\" value=\"dontPickUp\" type=\"radio\" name=\"question\">\n" +
-            "<label for=\"no\">Отклонить вызов</label><br>\n" +
-            "<input type = \"submit\" value=\"Ответить на вопрос\" name = \"takeACall\">\n" +
-            "</form>";
+    Questions questions = new Questions();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,69 +25,48 @@ public class MainServlet extends HttpServlet {
         req.setAttribute("name", name);
         req.setAttribute("ip", ip);
         req.setAttribute("gameCount", gameCount);
-        if (req.getParameter("restart")!=null) {
+        if (req.getParameter("restart") != null) {
             restart(req, resp);
-        } else if (req.getParameter("question").equals("pickUp")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<h1>Ты принял вызов</h1>\n" +
-                    "<p>     Поднимаешься на мостик к капитану?</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input id=\"yes\" value=\"climb\" type=\"radio\" name=\"question\">\n" +
-                    "<label for=\"yes\">Поднятся на мостик</label><br>\n" +
-                    "<input id=\"no\" value=\"dontClimb\" type=\"radio\" name=\"question\">\n" +
-                    "<label for=\"no\">Отказаться подниматься на мостик</label><br>\n" +
-                    "<input type = \"submit\" value=\"Ответить на вопрос\" name = \"takeACall\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
-        } else if (req.getParameter("question").equals("dontPickUp")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<p>Ты отклонил вызов. Поражение.</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input type = \"submit\" value=\"Начать заново\" name = \"restart\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
-        } else if (req.getParameter("question").equals("climb")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<h1>Ты поднялся на мостик</h1>\n" +
-                    "<p>     Ты кто?</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input id=\"yes\" value=\"dontLie\" type=\"radio\" name=\"question\">\n" +
-                    "<label for=\"yes\">Рассказать правду о себе</label><br>\n" +
-                    "<input id=\"no\" value=\"lie\" type=\"radio\" name=\"question\">\n" +
-                    "<label for=\"no\">Соглать о себе</label><br>\n" +
-                    "<input type = \"submit\" value=\"Ответить на вопрос\" name = \"takeACall\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
-        } else if (req.getParameter("question").equals("dontClimb")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<p>Ты не пошел на переговоры. Поражение.</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input type = \"submit\" value=\"Начать заново\" name = \"restart\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
-        } else if (req.getParameter("question").equals("dontLie")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<h1>Тебя вернули домой</h1>\n" +
-                    "<p>     ПОБЕДА</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input type = \"submit\" value=\"Начать заново\" name = \"restart\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
-        } else if (req.getParameter("question").equals("lie")) {
-            req.removeAttribute("question");
-            req.setAttribute("question", "<p>Твою ложь разоблачили. Поражение.</p>" +
-                    "<form method=\"post\">\n" +
-                    "<input type = \"submit\" value=\"Начать заново\" name = \"restart\">\n" +
-                    "</form>");
-            getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+        }
+        String answer = req.getParameter("question");
+        System.out.println(answer);
+        if (answer == null) {
+            resp.getWriter().println("<script type='text/javascript'>alert('Нужно выбрать вариант ответа')</script>");
+            return;
+        }
+        switch (answer) {
+            case "pickUp":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("climbOrNot"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+            case "dontPickUp":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("loseAfterStart"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+            case "climb":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("lieOrNot"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+            case "dontClimb":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("loseAfterNotClimb"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+            case "dontLie":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("win"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
+            case "lie":
+                req.removeAttribute("question");
+                req.setAttribute("question", questions.questions.get("loseAfterLie"));
+                getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
         }
     }
 
     private void restart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("question", defaultQuestion);
+        req.setAttribute("question", questions.questions.get("startQuestion"));
         gameCount++;
         req.setAttribute("gameCount", gameCount);
-        getServletContext().getRequestDispatcher("/index.jsp").forward(req,resp);
+        getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 
     private void takeAttributes() throws UnknownHostException {
@@ -111,7 +82,7 @@ public class MainServlet extends HttpServlet {
         req.setAttribute("name", name);
         req.setAttribute("ip", ip);
         req.setAttribute("gameCount", gameCount);
-        req.setAttribute("question", defaultQuestion);
+        req.setAttribute("question", questions.questions.get("startQuestion"));
         getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }
