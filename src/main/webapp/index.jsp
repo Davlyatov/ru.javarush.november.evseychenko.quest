@@ -2,9 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="css/my.css" type="text/css"/>
 <title>Квест игра</title>
 </head>
-<body>
+<body class="center">
 ${question}
 <br>
 <br>
