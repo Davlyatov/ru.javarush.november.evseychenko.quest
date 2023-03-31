@@ -17,8 +17,8 @@
     </tr>
     <tr>
         <form method="post">
-        <td><input type="submit" ${answer1} class="input-filter">
-        <td><input type="submit" ${answer2} class="input-filter">
+            <td><button value="${answer1}" name="answer">${btn1}</button></td>
+            <td><button value="${answer2}" name="answer">${btn2}</button></td>
         </form>
     </tr>
     </tbody>

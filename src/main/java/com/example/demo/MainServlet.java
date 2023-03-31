@@ -1,7 +1,5 @@
 package com.example.demo;
 
-import jakarta.servlet.annotation.WebServlet;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -10,162 +8,170 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
-@WebServlet(name = "MainServlet", value = "/game")
 public class MainServlet extends HttpServlet {
 
     private String ip;
     private String name;
     private int gameCount = 1;
     Questions questions = new Questions();
+    public String answer = "";
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         takeAttributes();
         req.setAttribute("name", name);
         req.setAttribute("ip", ip);
         req.setAttribute("gameCount", gameCount);
         String nextQuestion;
-        if (req.getParameter("restart") != null) {
-            restart(req, resp);
+        if (req.getParameter("answer") != null){
+            answer = req.getParameter("answer");
         }
 
         //После поворота налево
-        if (req.getParameter("turnLeft") != null) {
+        if (answer.equals("turnLeft")) {
             nextQuestion = "turnLeftNextQuestion";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("jumpInto") != null) {
+        if (answer.equals("jumpInto")) {
             nextQuestion = "questionAfterJump";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("continueOnYourWay") != null) {
+        if (answer.equals("continueOnYourWay")) {
             nextQuestion = "continueWayWithWin";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("goBackAnotherWay") != null) {
+        if (answer.equals("goBackAnotherWay")) {
             nextQuestion = "getBackWithLose";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("getBack") != null) {
+        if (answer.equals("getBack")) {
             nextQuestion = "getBackBeforeRiver";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("buildATent") != null) {
+        if (answer.equals("buildATent")) {
             nextQuestion = "loseAfterBuild";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("dontStop") != null) {
+        if (answer.equals("dontStop")) {
             nextQuestion = "continueWayWithWin";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
 
         //После поворота направо
-        if (req.getParameter("turnRight") != null) {
+        if (answer.equals("turnRight")) {
             nextQuestion = "turnRightNextQuestion";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("ignore") != null) {
+        if (answer.equals("ignore")) {
             nextQuestion = "dontCheckWithLose";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("checkTheBushes") != null) {
+        if (answer.equals("checkTheBushes")) {
             nextQuestion = "questionAfterCheckBushes";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("checkHouse") != null) {
+        if (answer.equals("checkHouse")) {
             nextQuestion = "questionAfterCheckHouse";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
 
         //Продолжение с ключом
-        if (req.getParameter("findKey") != null) {
+        if (answer.equals("findKey")) {
             nextQuestion = "questionAfterKey";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("openLeft") != null) {
+        if (answer.equals("openLeft")) {
             nextQuestion = "questionAfterLeftDoor";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("openRight") != null) {
+        if (answer.equals("openRight")) {
             nextQuestion = "questionAfterRightDoor";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
 
         //Подолжение с книгой
-        if (req.getParameter("findBook") != null) {
+        if (answer.equals("findBook")) {
             nextQuestion = "questionAfterBook";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("openBook") != null) {
+        if (answer.equals("openBook")) {
             nextQuestion = "questionAfterOpen";
             req = setNextQuestion(req, nextQuestion);
-            getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+            req.getRequestDispatcher("/game.jsp").forward(req, resp);
         }
-        if (req.getParameter("useSpells") != null) {
+        if (answer.equals("useSpells")) {
             nextQuestion = "winAfterSpells";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
         }
-        if (req.getParameter("dontUseSpells") != null) {
+        if (answer.equals("dontUseSpells")) {
             nextQuestion = "winAfterNotSpells";
-            req = setRestart(req,nextQuestion);
-            getServletContext().getRequestDispatcher("/restart.jsp").forward(req, resp);
+            req = setRestart(req, nextQuestion);
+            req.getRequestDispatcher("/restart.jsp").forward(req, resp);
+        }
+
+        //После нажатия "начать заново"
+        if (answer.equals("restart")) {
+            restart(req, resp);
         }
     }
 
-    private HttpServletRequest setRestart(HttpServletRequest req, String nextQuestion) {
+    public HttpServletRequest setRestart(HttpServletRequest req, String nextQuestion) {
         req.setAttribute("header1", questions.questionsMap.get(nextQuestion).get("header"));
         req.setAttribute("p1", questions.questionsMap.get(nextQuestion).get("p1"));
         req.setAttribute("p2", questions.questionsMap.get(nextQuestion).get("p2"));
-        req.setAttribute("restartBtn", questions.questionsMap.get(nextQuestion).get("restartBtn"));
-        if (questions.questionsMap.get(nextQuestion).containsKey("img")){
+        if (questions.questionsMap.get(nextQuestion).containsKey("img")) {
             req.setAttribute("img", questions.questionsMap.get(nextQuestion).get("img"));
         }
         return req;
     }
 
-    private HttpServletRequest setNextQuestion(HttpServletRequest req, String nextQuestion) {
+    public HttpServletRequest setNextQuestion(HttpServletRequest req, String nextQuestion) {
         req.setAttribute("header1", questions.questionsMap.get(nextQuestion).get("header"));
         req.setAttribute("img", questions.questionsMap.get(nextQuestion).get("img"));
         req.setAttribute("question", questions.questionsMap.get(nextQuestion).get("question"));
         req.setAttribute("answer1", questions.questionsMap.get(nextQuestion).get("answer1"));
+        req.setAttribute("btn1", questions.questionsMap.get(nextQuestion).get("btnName1"));
         req.setAttribute("answer2", questions.questionsMap.get(nextQuestion).get("answer2"));
+        req.setAttribute("btn2", questions.questionsMap.get(nextQuestion).get("btnName2"));
         return req;
     }
 
-    private void restart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void restart(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req = setDefQuestion(req);
         gameCount++;
         req.setAttribute("gameCount", gameCount);
         getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
     }
 
-    private HttpServletRequest setDefQuestion(HttpServletRequest req) {
+    public HttpServletRequest setDefQuestion(HttpServletRequest req) {
         req.setAttribute("header1", questions.questionsMap.get("defaultQuestion").get("header"));
         req.setAttribute("img", questions.questionsMap.get("defaultQuestion").get("img"));
         req.setAttribute("question", questions.questionsMap.get("defaultQuestion").get("question"));
         req.setAttribute("answer1", questions.questionsMap.get("defaultQuestion").get("answer1"));
+        req.setAttribute("btn1", questions.questionsMap.get("defaultQuestion").get("btnName1"));
         req.setAttribute("answer2", questions.questionsMap.get("defaultQuestion").get("answer2"));
+        req.setAttribute("btn2", questions.questionsMap.get("defaultQuestion").get("btnName2"));
         return req;
     }
 
-    private void takeAttributes() throws UnknownHostException {
+    public void takeAttributes() throws UnknownHostException {
         ip = String.valueOf(Inet4Address.getLocalHost());
         String[] tempIp = ip.split("/");
         ip = tempIp[1];
@@ -173,12 +179,12 @@ public class MainServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         takeAttributes();
         req = setDefQuestion(req);
         req.setAttribute("name", name);
         req.setAttribute("ip", ip);
         req.setAttribute("gameCount", gameCount);
-        getServletContext().getRequestDispatcher("/game.jsp").forward(req, resp);
+        req.getRequestDispatcher("/game.jsp").forward(req, resp);
     }
 }

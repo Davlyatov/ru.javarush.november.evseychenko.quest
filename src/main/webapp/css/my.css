@@ -6,6 +6,7 @@
 table {
     width: 632px;
     margin: auto;
+    border-collapse: collapse;
 }
 
 .center {

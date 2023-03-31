@@ -1,0 +1,1 @@
+B настройках tomCat выставить url/introduction, в deployment "Application Context" оставить пустым.

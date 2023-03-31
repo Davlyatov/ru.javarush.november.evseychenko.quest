@@ -17,7 +17,7 @@ ${img}
 <p>${p1}</p>
 <p>${p2}</p>
 <form method="post">
-    <input type="submit" ${restartBtn}>
+    <button name="answer" value="restart">Начать заново</button>
 </form>
 <br>
 <br>
