@@ -1,4 +1,4 @@
-package com.example.demo;
+package ru.quest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

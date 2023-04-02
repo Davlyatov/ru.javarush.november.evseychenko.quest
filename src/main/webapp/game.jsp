@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -13,12 +14,12 @@
         <td colspan="2"><img ${img}></td>
     </tr>
     <tr>
-        <td colspan="2">${question}</td>
+        <td colspan="2"><c:out value="${question}"/></td>
     </tr>
     <tr>
         <form method="post">
-            <td><button value="${answer1}" name="answer">${btn1}</button></td>
-            <td><button value="${answer2}" name="answer">${btn2}</button></td>
+            <td><button value=<c:out value="${answer1}"/>  name="answer"><c:out value="${btn1}"/></button></td>
+            <td><button value=<c:out value="${answer2}"/>  name="answer"><c:out value="${btn2}"/></button></td>
         </form>
     </tr>
     </tbody>

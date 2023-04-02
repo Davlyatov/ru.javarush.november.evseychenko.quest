@@ -1,11 +1,11 @@
-package com.example.demo;
+package ru.quest;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Questions {
 
-    public final Map<String, Map<String, String>> questionsMap = new HashMap<>();
+    private final Map<String, Map<String, String>> questionsMap = new HashMap<>();
 
     {
         Map<String, String> defQuestMap = new HashMap<>();
@@ -158,5 +158,9 @@ public class Questions {
         winAfterNotSpells.put("p1","И продолжили свой путь. В итоге вы нашли выход из леса");
         winAfterNotSpells.put("p2","Поздравляем, вы справились с заданием!");
         questionsMap.put("winAfterNotSpells",winAfterNotSpells);
+    }
+
+    public String getRequiredAttribute(String mapName,String requiredAttribute){
+        return questionsMap.get(mapName).getOrDefault(requiredAttribute, null);
     }
 }

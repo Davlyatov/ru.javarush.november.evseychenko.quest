@@ -5,7 +5,7 @@
          version="5.0">
     <servlet>
         <servlet-name>IntroductionServlet</servlet-name>
-        <servlet-class>com.example.demo.IntroductionServlet</servlet-class>
+        <servlet-class>ru.quest.IntroductionServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>IntroductionServlet</servlet-name>
@@ -13,7 +13,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>MainServlet</servlet-name>
-        <servlet-class>com.example.demo.MainServlet</servlet-class>
+        <servlet-class>ru.quest.MainServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainServlet</servlet-name>
